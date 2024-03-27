@@ -3,11 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/styles.css">
     <script defer src="./js/main.js"></script>
     <title>Proyecto</title>
 </head>
 <body>
-    <h1>Proyecto Juan Pablo Guzman Pedraza</h1>
-    <p>El proyecto consiste en un conversor de moneda que le permite a los usuarios calcular el valor equivalente entre dos monedas diferentes. Estos usuarios tendran que ingresar los respectivos paises y valores de las monedas, donde los resultados se almacenaran. Además tendran la opción de ver el historial de las conversiones.</p>
+    <div class="container">
+        <h1>Conversor de Moneda</h1>
+        <button id="showConversionForm">Realizar Conversión</button>
+        <button id="showConversionHistory">Ver Historial de Conversiones</button>
+        <div id="conversionForm">
+            <div class="input-destination-container">
+                <input type="text" id="countryDestination" placeholder="País de Destino">
+            <input type="number" id="valueDestination" placeholder="Valor de Destino">
+            </div>
+            <div class="input-origin-container">
+                <input type="text" id="countryOrigin" placeholder="País de Origen">
+            <input type="number" id="valueOrigin" placeholder="Valor de Origen">
+            </div>
+            <div class="button-container">
+                <button id="convert">Convertir</button>
+                <button id="restart">Reiniciar</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

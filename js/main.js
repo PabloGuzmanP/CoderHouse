@@ -1,54 +1,70 @@
-let continues = true
-const results = []
-const currency = {
-    countryOrigin: "",
-    valueOrigin: 0,
-    countryDestination: "",
-    valueDestination: 0
-}
+let botonFormConvertir = document.getElementById("showConversionForm")
+let botonHistorial = document.getElementById("showConversionHistory")
+let formConvertir = document.getElementById("conversionForm")
+let botonConvertir = document.getElementById("convert")
+let botonReiniciar = document.getElementById("restart")
 
-function convert(){
-    let answerCountryDes = prompt("Ingrese el nombre del pais de la moneda que quiere convertir: ")
-    let answerValueDes = parseInt(prompt("Ingrese el valor de la moneda que desea adquirir (sin puntos ni comas): "))
-    let answerCountry = prompt("Ingrese el nombre del pais de la moneda actual: ")
-    let answerValue = parseInt(prompt("Ingrese el valor de la moneda que quiere convertir (sin puntos ni comas): "))
+formConvertir.style.display = "none"
 
-    let result = operation(answerValue, answerValueDes)
-    currency.countryOrigin = answerCountryDes;
-    currency.valueOrigin = answerValueDes;
-    currency.countryDestination = answerCountry;
-    currency.valueDestination = result;
+const results = [];
+
+function convert() {
+    let answerCountryDes = document.getElementById("countryDestination").value;
+    let answerValueDes = parseInt(document.getElementById("valueDestination").value);
+    let answerCountry = document.getElementById("countryOrigin").value;
+    let answerValue = parseInt(document.getElementById("valueOrigin").value);
+
+    const currency = {
+        countryOrigin: answerCountry,
+        valueOrigin: answerValueDes,
+        countryDestination: answerCountryDes,
+        valueDestination: operation(answerValue, answerValueDes)
+    };
 
     results.push(currency);
-    
+
+    addToLocalStorage(currency);
+}
+
+function addToLocalStorage(data){
+    let conversionCounter = parseInt(localStorage.getItem("conversionCounter") || 0)
+    conversionCounter++
+
+    localStorage.setItem("PaisOrigen_" + conversionCounter, data.countryOrigin)
+    localStorage.setItem("ValorOrigen_" + conversionCounter, data.valueOrigin)
+    localStorage.setItem("PaisDestino_" + conversionCounter, data.countryDestination)
+    localStorage.setItem("ValorDestino_" + conversionCounter, data.valueDestination)
+
+    localStorage.setItem("conversionCounter", conversionCounter)
 }
 
 const operation = (answerValue, answerValueDes) => {
-    return answerValue * answerValueDes
+    return answerValue * answerValueDes;
+};
+
+botonFormConvertir.onclick = () => {
+    formConvertir.style.display = "block"
 }
 
-while(continues === true){
-    let menu = parseInt(prompt("Ingrese: \n1. Para realizar la conversion. \n2. Ver su historial de conversiones \n3. Salir"))
-    switch(menu){
-        case 1:
-            convert();
-            break
-        case 2: 
-            for (let i = 0; i < results.length; i++){
-                console.log("El pais cuya moneda usted busca convertir es: " + results[results.length-1].countryOrigin + ", donde el valor solicitado es: " + results[results.length-1].valueOrigin + ". \nEl pais con la moneda que usted cuenta es: " + results[results.length-1].countryDestination + ", arrojando una conversion de: " + results[results.length-1].valueDestination + ".")
-                console.log("--------------------------------------------------")
-            }
-            break
-        case 3: 
-            let answer = confirm("¿Esta seguro que desea salir?")
-            if(answer  == true){
-                continues = false
-                break
-            }
-            else {
-                continue
-            }
-        default:
-            alert("Opción no valida, vuelva a intentar")
+botonConvertir.onclick = () => {
+    convert()
+    let convertHTML = document.createElement("div")
+    for (let i = 0; i < results.length; i++) {
+        convertHTML.innerHTML += `<p>El país cuya moneda usted busca convertir es: ${results[i].countryDestination}, donde el valor solicitado es: ${results[i].valueOrigin}. <br> El país con la moneda que usted cuenta es: ${results[i].countryOrigin}, arrojando una conversión de: ${results[i].valueDestination}.</p><hr>`;
     }
+    formConvertir.appendChild(convertHTML)
 }
+
+botonHistorial.onclick = () =>{
+    alert("Abrir el localStorage de la consola para ver el historial")
+    console.log(results)
+}
+
+botonReiniciar.onclick = () => {
+    document.getElementById("countryDestination").value = "";
+    document.getElementById("valueDestination").value = "";
+    document.getElementById("countryOrigin").value = "";
+    document.getElementById("valueOrigin").value = "";
+
+    formConvertir.remove()
+};
